@@ -27,9 +27,9 @@ class Updatepvuv_model extends CI_Model {
             $uv_windows_total += $row['uv_windows'];
             $uv_others_total += $row['uv_others'];
         }
-        $sql_update = "UPDATE `pvuv-total` set pv = {$pv_total},download_app_times = {$download_app_times_total},uv = {$uv_total},uv_android = {$uv_android_total},uv_ios = {$uv_ios_total},uv_windows = {$uv_windows_total},uv_others = {$uv_others_total},updatetime = '{$timeFlag}'";
+        $sql_update = "UPDATE `pvuv-total` set pv = {$pv_total},download_app_times = {$download_app_times_total},uv = {$uv_total},uv_android = {$uv_android_total},uv_ios = {$uv_ios_total},uv_windows = {$uv_windows_total},uv_others = {$uv_others_total} WHERE updatetime = '{$timeFlag}'";
         $sql_insert = "INSERT INTO `pvuv-total` (pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others,updatetime) VALUES ({$pv_total},{$download_app_times_total},{$uv_total},{$uv_android_total},{$uv_ios_total},{$uv_windows_total},{$uv_others_total},'{$timeFlag}')";
-        if($this->db->query("SELECT * from `pvuv-total`")->num_rows())
+        if($this->db->query("SELECT * from `pvuv-total` WHERE updatetime = '{$timeFlag}'")->num_rows())
         {
             $query = $this->db->query($sql_update);
             if(!$query)

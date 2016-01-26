@@ -9,7 +9,7 @@ class Updatemovie_model extends CI_Model {
     public function handle($timeFlag)
     {
         $flag = 0;
-        for($i = 0;$i<30;$i++)
+        for($i = 0;$i<10;$i++)
         {
             $data = $this->db->query("SELECT * from `movie-times` WHERE time = '{$timeFlag}' AND movie_name = '{$i}'")->result_array();
             $movie_play_total = 0;
@@ -17,7 +17,7 @@ class Updatemovie_model extends CI_Model {
             {
                 $movie_play_total += $row['movie_play_times'];
             }
-            $sql_update = "UPDATE `movie-total` set movie_name = {$i},movie_play_total = {$movie_play_total},updatetime = '{$timeFlag}'";
+            $sql_update = "UPDATE `movie-total` set movie_play_total = {$movie_play_total} WHERE updatetime = '{$timeFlag}' AND movie_name = {$i}";
             $sql_insert = "INSERT INTO `movie-total` (movie_name,movie_play_total,updatetime) VALUES ({$i},{$movie_play_total},'{$timeFlag}')";
             if($this->db->query("SELECT * from `movie-total` WHERE updatetime = '{$timeFlag}' AND movie_name = '{$i}'")->num_rows())
             {
