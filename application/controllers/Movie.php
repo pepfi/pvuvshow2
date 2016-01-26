@@ -9,11 +9,16 @@ class Movie extends CI_Controller{
     }
     
     function movie_name(){
-        $data['movie_0_name'] = "我是传奇";
-        $data['movie_1_name'] = "夏洛特烦恼";
-        $data['movie_2_name'] = "心花路放";
-        $data['movie_3_name'] = "大话天仙";
-        $data['movie_4_name'] = "少女与狼";
+        $data['0'] = "惊天魔盗团";
+        $data['1'] = "特警判官";
+        $data['2'] = "澳门风云2";
+        $data['3'] = "暴风雨";
+        $data['4'] = "匆匆那年";
+        $data['5'] = "撒娇女人最好命";
+        $data['6'] = "白发魔女传";
+        $data['7'] = "星际穿越";
+        $data['8'] = "一触即发";
+        $data['9'] = "大话天仙";
         $this->load->vars($data);
     }
     
@@ -89,9 +94,9 @@ class Movie extends CI_Controller{
     }
     
     public function index(){
-        if($this->session->userdata('username') == null){
-            redirect('admin/validate_credentials');
-            exit;
+       if($this->session->userdata('username') == null){
+           redirect('admin/validate_credentials');
+           exit;
         }
         
         $data['home_nav_class'] = "";

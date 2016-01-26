@@ -89,13 +89,21 @@ class Updatelog_model extends CI_Model {
 	                            echo "uv:$uv";
 
 	                            // insert into databases;
-
+                                $sql_device = "INSERT INTO `pvuv-device` (device_mac,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) values ('{$device_mac}','{$timeForLog}','{$logdate[0]}','{$logdate[1]}','{$uv}','{$logdate[2]}','{$logdate[3]}','{$logdate[4]}','0')";
+                                
+                                $query = $this->db->query($sql_device);
+                                for($i=0;$i<10;$i++)
+			                	{
+			                		$sql_movie = "INSERT INTO `movie-times` (device_mac,time,movie_name,movie_play_times) values ('{$device_mac}','{$timeForLog}','{$i}','{$logdate[$i+5]}')";
+                                    $query = $this->db->query($sql_movie);                                  
+                                    
+                                    
+			                	}
 
 				            }
-                           
-                        
+                                                   
                             //fclose($file_handle);
-                        break; //every file
+                        //break; //every file
                     } //if filename > length
                     
                 }// while readdir
