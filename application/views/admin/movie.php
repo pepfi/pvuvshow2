@@ -160,7 +160,7 @@
             <tr> 
                 <td width="20%"><?php echo $row['device_mac'];?></td>
                 <td width="25%"><?php echo $row['time'];?></td>
-                <td width="25%"><?php echo $row['movie_name'];?></td>
+                <td width="25%"><?php echo ${"movie_".$row['movie_name']."_name"};?></td>
                 <td width="25%"><?php echo $row['movie_play_times'];?></td>         
             </tr>
         <?php endforeach?>
