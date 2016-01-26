@@ -30,10 +30,6 @@ class Pvuv extends CI_Controller{
     }
     
     public function index(){
-        if($this->session->userdata('username') == null){
-            redirect('admin/validate_credentials');
-            exit;
-        }
         
         $this->page();
         
@@ -69,34 +65,34 @@ class Pvuv extends CI_Controller{
         $data['uv']['yesterday'] = 0;
         $data['uv']['today'] = 0;
         foreach($data['detail'] as $num1){
-            switch($num1['time']){
+            switch($num1['updatetime']){
                 case $six_days_ago;
-                    $data['pv']['six_days_ago'] += $num1['pv'];
-                    $data['uv']['six_days_ago'] += $num1['uv'];
+                    $data['pv']['six_days_ago'] = $num1['pv'];
+                    $data['uv']['six_days_ago'] = $num1['uv'];
                     break;
                 case $five_days_ago;
-                    $data['pv']['five_days_ago'] += $num1['pv'];
-                    $data['uv']['five_days_ago'] += $num1['uv'];
+                    $data['pv']['five_days_ago'] = $num1['pv'];
+                    $data['uv']['five_days_ago'] = $num1['uv'];
                     break;
                 case $four_days_ago;
-                    $data['pv']['four_days_ago'] += $num1['pv'];
-                    $data['uv']['four_days_ago'] += $num1['uv'];
+                    $data['pv']['four_days_ago'] = $num1['pv'];
+                    $data['uv']['four_days_ago'] = $num1['uv'];
                     break;
                 case $three_days_ago;
-                    $data['pv']['three_days_ago'] += $num1['pv'];
-                    $data['uv']['three_days_ago'] += $num1['uv'];
+                    $data['pv']['three_days_ago'] = $num1['pv'];
+                    $data['uv']['three_days_ago'] = $num1['uv'];
                     break;
                 case $two_days_ago;
-                    $data['pv']['two_days_ago'] += $num1['pv'];
-                    $data['uv']['two_days_ago'] += $num1['uv'];
+                    $data['pv']['two_days_ago'] = $num1['pv'];
+                    $data['uv']['two_days_ago'] = $num1['uv'];
                     break;
                 case $yesterday;
-                    $data['pv']['yesterday'] += $num1['pv'];
-                    $data['uv']['yesterday'] += $num1['uv'];
+                    $data['pv']['yesterday'] = $num1['pv'];
+                    $data['uv']['yesterday'] = $num1['uv'];
                     break;
                 case $today;
-                    $data['pv']['today'] += $num1['pv'];
-                    $data['uv']['today'] += $num1['uv'];                
+                    $data['pv']['today'] = $num1['pv'];
+                    $data['uv']['today'] = $num1['uv'];                
                     break;
                 default:
                     break;

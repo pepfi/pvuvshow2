@@ -2,23 +2,44 @@
 class Movie extends CI_Controller{
     public function __construct(){
         parent::__construct();
-        $this->load->library('session');
         $this->load->helper('url');
         $this->load->model('movie_model');
+        $this->load->library('pagination');
+    }
+    
+    public function page(){
+        $config['base_url'] = base_url('/movie/index/');;
+        $config['total_rows'] = $this->movie_model->info_nums();
+        $config['per_page'] = 5;
+        $config['first_link'] = '首页';        
+        $config['last_link'] = '尾页';
+        $config['prev_link'] = '上一页'; 
+        $config['next_link'] = '下一页';
+        $config['cur_tag_open'] = "<div style='display:block;width:20px;height:20px;float:left;background:#337ab7;color:white;text-align:center'>";
+        $config['cur_tag_close'] = '</div>';
+        $config['num_tag_open'] = "<div style='display:block;width:20px;height:20px;float:left;text-align:center'>";
+        $config['num_tag_close'] = '</div>';         
+        $this->pagination->initialize($config);
         
+        $data['page'] = $this->pagination->create_links();
+        
+        $offset = ($this->uri->segment(3) == null)?0:$this->uri->segment(3);
+        $pageSize = $config['per_page'];
+        $data['deviceinfo'] = $this->movie_model->deviceinfo($offset, $pageSize);
+        $this->load->vars($data);
     }
     
     function movie_name(){
-        $data['0'] = "惊天魔盗团";
-        $data['1'] = "特警判官";
-        $data['2'] = "澳门风云2";
-        $data['3'] = "暴风雨";
-        $data['4'] = "匆匆那年";
-        $data['5'] = "撒娇女人最好命";
-        $data['6'] = "白发魔女传";
-        $data['7'] = "星际穿越";
-        $data['8'] = "一触即发";
-        $data['9'] = "大话天仙";
+        $data['movie_0_name'] = "惊天魔盗团";
+        $data['movie_1_name'] = "特警判官";
+        $data['movie_2_name'] = "澳门风云2";
+        $data['movie_3_name'] = "暴风雨";
+        $data['movie_4_name'] = "匆匆那年";
+        $data['movie_5_name'] = "撒娇女人最好命";
+        $data['movie_6_name'] = "白发魔女传";
+        $data['movie_7_name'] = "星际穿越";
+        $data['movie_8_name'] = "一触即发";
+        $data['movie_9_name'] = "大话天仙";
         $this->load->vars($data);
     }
     
@@ -37,29 +58,38 @@ class Movie extends CI_Controller{
     
     function movie_result($movie_name, $movie_time, $movie_times){
         switch($movie_name){
-            case "我是传奇":
+            case "0":
                 $data['movie_0_pv'.$movie_time] = $movie_times;
                 break;
-            case "夏洛特烦恼":
+            case "1":
                 $data['movie_1_pv'.$movie_time] = $movie_times;
                 break;
-            case "心花路放":
+            case "2":
                 $data['movie_2_pv'.$movie_time] = $movie_times;
                 break;
-            case "大话天仙":
+            case "3":
                 $data['movie_3_pv'.$movie_time] = $movie_times;
                 break;
-            case "少女与狼":
+            case "4":
                 $data['movie_4_pv'.$movie_time] = $movie_times;
                 break;
-            case "我是谁":
+            case "5":
                 $data['movie_5_pv'.$movie_time] = $movie_times;
                 break;
-            case "一个好人":
+            case "6":
                 $data['movie_6_pv'.$movie_time] = $movie_times;
                 break;
+            case "7":
+                $data['movie_7_pv'.$movie_time] = $movie_times;
+                break;
+            case "8":
+                $data['movie_8_pv'.$movie_time] = $movie_times;
+                break;
+            case "9":
+                $data['movie_9_pv'.$movie_time] = $movie_times;
+                break;
             default:
-                echo "错误";
+//                echo "错误";
             break;
         }
         $this->load->vars($data);
@@ -89,15 +119,13 @@ class Movie extends CI_Controller{
                 $this->movie_result($movie_name, "_today", $movie_times);
                 break;
             default:
-                echo "错误";
+//                echo "错误";
         }
     }
     
     public function index(){
-       if($this->session->userdata('username') == null){
-           redirect('admin/validate_credentials');
-           exit;
-        }
+        
+        $this->page();
         
         $data['home_nav_class'] = "";
         $data['device_nav_class'] = '';
@@ -113,7 +141,7 @@ class Movie extends CI_Controller{
         
         date_default_timezone_set('PRC'); 
         foreach($data['movie_info'] as $num){
-            $this->movie_time($num['movie_name'], $num['time'], $num['movie_play_times']);
+            $this->movie_time($num['movie_name'], $num['updatetime'], $num['movie_play_total']);
         }
 
         $this->load->view('admin/header', $data);

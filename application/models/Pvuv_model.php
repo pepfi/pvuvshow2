@@ -15,7 +15,7 @@ class Pvuv_model extends CI_Model {
     }
     
     public function detail(){
-        $sql = "SELECT * FROM `pvuv-device` order by time desc";           
+        $sql = "SELECT pv,uv,updatetime FROM `pvuv-total`";           
         
         return $this->db->query($sql)->result_array();
     }

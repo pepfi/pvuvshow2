@@ -1,7 +1,8 @@
 
 <script src="/application/views/global/custom/js/esl.js"></script>
 <div style="width:100%;">总Pv：<?php echo $totalpv;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;总Uv：<?php echo $totaluv;?></div>
-<div id="main" style="width:800px;height:400px;border:1px solid #ccc"></div>
+<div id="chart0" style="width:370px;height:250px;border:1px solid #ccc;float:left"></div>
+<div id="chart1" style="width:370px;height:250px;border:1px solid #ccc;float:left"></div>
 <?php 
     date_default_timezone_set('PRC');
     $six_days_ago = "'".date('y-m-d', strtotime('-6 day'))."'";
@@ -22,23 +23,13 @@
         require(
             ['echarts'],
             function(ec) {
-                var myChart = ec.init(document.getElementById('main'));
+                var myChart = ec.init(document.getElementById('chart0'));
                 var option = {
                     tooltip : {
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['Pv','Uv']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : true,
-                            dataView : {readOnly: false},
-                            magicType:['line', 'bar'],
-                            restore : true,
-                            saveAsImage : true
-                        }
+                        data:['Pv']
                     },
                     calculable : true,
                     xAxis : [
@@ -58,7 +49,48 @@
                             name:'Pv',
                             type:'line',
                             data:[".$pv['six_days_ago'].", ".$pv['five_days_ago'].", ".$pv['four_days_ago'].", ".$pv['three_days_ago'].", ".$pv['two_days_ago'].", ".$pv['yesterday'].", ".$pv['today']."]
-                        },
+                        }
+                    ]
+                };
+                
+                myChart.setOption(option);
+            }
+        );
+        </script>";
+
+   echo 
+        "<script type='text/javascript'>
+        require.config({
+            paths:{ 
+                echarts:'/application/views/global/custom/js/echarts'
+            }
+        });
+    
+        require(
+            ['echarts'],
+            function(ec) {
+                var myChart = ec.init(document.getElementById('chart1'));
+                var option = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['Uv']
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : [".$six_days_ago.", ".$five_days_ago.", ".$four_days_ago.", ".$three_days_ago.", ".$two_days_ago.", ".$yesterday.", ".$today."]
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            splitArea : {show : true}
+                        }
+                    ],
+                    series : [
                         {
                             name:'Uv',
                             type:'line',

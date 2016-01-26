@@ -48,17 +48,28 @@
             </div>
             <div class="col-md-1"></div>
             <div class="col-md-2">
-                <ul class="nav nav-pills">
-                      <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['username']; ?><span class="caret"></span></a>
-                          <ul class="dropdown-menu">
-                              <li><a href="/admin/list_admin">查看管理员</a></li>
-                            <li><a href="/admin/add_admin">添加管理员</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="/admin/logout">退出</a></li>
-                          </ul>
-                      </li>
-                </ul>
+                <?php 
+                    if($this->session->userdata('username') != null){
+                        echo " 
+                            <ul class='nav nav-pills'>
+                                  <li class='dropdown'>
+                                      <a href='#' class='dropdown-toggle' data-toggle='dropdown'>";
+                        echo $_SESSION['username'];
+                        echo "<span class='caret'></span></a>
+                                      <ul class='dropdown-menu'>
+                                          <li><a href='/admin/list_admin'>查看管理员</a></li>
+                                        <li><a href='/admin/add_admin'>添加管理员</a></li>
+                                        <li role='separator' class='divider'></li>
+                                        <li><a href='/admin/logout'>退出</a></li>
+                                      </ul>
+                                  </li>
+                            </ul>
+                        ";
+                    }
+                    else{
+                        echo "<a style='float:left;margin-top:8px' href='".base_url('/admin')."'>登录</a>";
+                    }
+                ?>
             </div>
         </div>
         <div class="row">

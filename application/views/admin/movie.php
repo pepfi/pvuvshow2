@@ -1,5 +1,6 @@
 <script src="/application/views/global/custom/js/esl.js"></script>
 <div id="chart0" style="width:370px;height:250px;border:1px solid #ccc;float:left"></div>
+<div id="chart1" style="width:370px;height:250px;border:1px solid #ccc;float:left"></div>
 <?php
     date_default_timezone_set('PRC');
     $six_days_ago = "'".date('y-m-d', strtotime('-6 day'))."'";
@@ -76,4 +77,110 @@
             }
         );
         </script>";
+
+
+    echo 
+        "<script type='text/javascript'>
+        require.config({
+            paths:{ 
+                echarts:'/application/views/global/custom/js/echarts'
+            }
+        });
+    
+        require(
+            ['echarts'],
+            function(ec) {
+                var myChart = ec.init(document.getElementById('chart1'));
+                var option = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['".$movie_5_name."','".$movie_6_name."','".$movie_7_name."','".$movie_8_name."','".$movie_9_name."']
+                    },
+
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : [".$six_days_ago.", ".$five_days_ago.", ".$four_days_ago.", ".$three_days_ago.", ".$two_days_ago.", ".$yesterday.", ".$today."]
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            splitArea : {show : true}
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'".$movie_5_name."',
+                            type:'line',
+                            data:[".$movie_5_pv_six_days_ago.", ".$movie_5_pv_five_days_ago.", ".$movie_5_pv_four_days_ago.", ".$movie_5_pv_three_days_ago.", ".$movie_5_pv_two_days_ago.", ".$movie_5_pv_yesterday.", ".$movie_5_pv_today."]
+                        },
+                        {
+                            name:'".$movie_6_name."',
+                            type:'line',
+                            data:[".$movie_6_pv_six_days_ago.", ".$movie_6_pv_five_days_ago.", ".$movie_6_pv_four_days_ago.", ".$movie_6_pv_three_days_ago.", ".$movie_6_pv_two_days_ago.", ".$movie_6_pv_yesterday.", ".$movie_6_pv_today."]
+                        },
+                        {
+                            name:'".$movie_7_name."',
+                            type:'line',
+                            data:[".$movie_7_pv_six_days_ago.", ".$movie_7_pv_five_days_ago.", ".$movie_7_pv_four_days_ago.", ".$movie_7_pv_three_days_ago.", ".$movie_7_pv_two_days_ago.", ".$movie_7_pv_yesterday.", ".$movie_7_pv_today."]
+                        },
+                        {
+                            name:'".$movie_8_name."',
+                            type:'line',
+                            data:[".$movie_8_pv_six_days_ago.", ".$movie_8_pv_five_days_ago.", ".$movie_8_pv_four_days_ago.", ".$movie_8_pv_three_days_ago.", ".$movie_8_pv_two_days_ago.", ".$movie_8_pv_yesterday.", ".$movie_8_pv_today."]
+                        },
+                        {
+                            name:'".$movie_9_name."',
+                            type:'line',
+                            data:[".$movie_9_pv_six_days_ago.", ".$movie_9_pv_five_days_ago.", ".$movie_9_pv_four_days_ago.", ".$movie_9_pv_three_days_ago.", ".$movie_9_pv_two_days_ago.", ".$movie_9_pv_yesterday.", ".$movie_9_pv_today."]
+                        }
+
+                    ]
+                };
+                
+                myChart.setOption(option);
+            }
+        );
+        </script>";
 ?>
+
+<div style="width:800px;float:left;margin-top:10px">
+    <table>
+
+        <tr style="background:#337ab7;color:white;">
+            <td width="35%">device_mac</td>
+            <td width="15%">time</td>
+            <td width="25%">movie_name</td>
+            <td width="25%">movie_play_times</td>
+        </tr>
+        <?php foreach($deviceinfo as $row):?>
+            <tr> 
+                <td width="20%"><?php echo $row['device_mac'];?></td>
+                <td width="25%"><?php echo $row['time'];?></td>
+                <td width="25%"><?php echo $row['movie_name'];?></td>
+                <td width="25%"><?php echo $row['movie_play_times'];?></td>         
+            </tr>
+        <?php endforeach?>
+        
+    </table>
+</div>
+<div style="width:600px;float:right;margin-top:10px;">
+    <span><?php echo $page;?>跳到<input type='text' id='to_page' style='width:30px;height:20px'>页</span>
+    <input type="hidden" id="jump_url" value="<?php echo base_url('movie/index');?>">
+    <input type="button" value="确定" class='btn btn-default btn-xs' onClick='jump()'>
+</div> 
+
+<script type="text/javascript">
+    function jump(){
+        var jump_link;
+        if(document.getElementById("to_page").value > 0){
+            jump_link = document.getElementById("jump_url").value + "/" + (document.getElementById("to_page").value-1)*5;
+        }else{
+            jump_link = document.getElementById("jump_url").value+"/"+0;
+        }
+        window.open(jump_link, '_self');
+    }
+</script>
