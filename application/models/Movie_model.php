@@ -16,7 +16,7 @@ class Movie_model extends CI_Model{
     }    
     
     public function get_movies() {
-        $query = $this->db->query("select updatetime, movie_name, movie_play_total from `movie-total`");
+        $query = $this->db->query("select updatetime, movie_name, movie_play_total from `movie-total` order by updatetime desc");
         
         return $query->result_array();
     }   
