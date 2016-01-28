@@ -25,7 +25,6 @@ class Pvuv_device_model extends CI_Model {
             $sql = "SELECT count('{$deviceMacArray[$i]->device_mac}') FROM `pvuv-log` WHERE time BETWEEN '{$timeFlag} 00:00:00' AND '{$timeFlag} 23:59:59'";
            // return $sql;
             $targetMac = $deviceMacArray[$i]->device_mac;
-            return $targetMac;
             $snAndMac = $this->db->query("SELECT mac,hostsn FROM `info_lteinfo` group by mac")->result();
             foreach($snAndMac as $row)
             {

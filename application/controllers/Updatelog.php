@@ -9,7 +9,7 @@ class Updatelog extends CI_Controller {
     public function index()
     {
         $flag = $this->updatelog_model->handle();
-        echo "flag:$flag";
+        //echo "flag:$flag";
 //        if($flag)
 //        {
 //            echo "瀵煎叆澶辫触";
