@@ -87,17 +87,26 @@ class Updatelog_model extends CI_Model {
 	                            }
 	                            $uv = $logdate[2] + $logdate[3] + $logdate[4];
 	                            echo "uv:$uv";
-
+                                $snAndMac = $this->db->query("SELECT mac,hostsn FROM `info_lteinfo` group by mac")->result();
+                                foreach($snAndMac as $row)
+                                {
+                                    if(($row->mac === '{$device_mac}') && (isset($row->hostsn)))
+                                    {
+                                        $sn = $row->hostsn;
+                                    }
+                                    else
+                                    {
+                                        $sn = '000000000000000000000';
+                                    }
+                                }
 	                            // insert into databases;
-                                $sql_device = "INSERT INTO `pvuv-device` (device_mac,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) values ('{$device_mac}','{$timeForLog}','{$logdate[0]}','{$logdate[1]}','{$uv}','{$logdate[2]}','{$logdate[3]}','{$logdate[4]}','0')";
+                                $sql_device = "INSERT INTO `pvuv-device` (device_mac,sn,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) values ('{$device_mac}','{$sn}','{$timeForLog}','{$logdate[0]}','{$logdate[1]}','{$uv}','{$logdate[2]}','{$logdate[3]}','{$logdate[4]}','0')";
                                 
                                 $query = $this->db->query($sql_device);
                                 for($i=0;$i<10;$i++)
 			                	{
-			                		$sql_movie = "INSERT INTO `movie-times` (device_mac,time,movie_name,movie_play_times) values ('{$device_mac}','{$timeForLog}','{$i}','{$logdate[$i+5]}')";
-                                    $query = $this->db->query($sql_movie);                                  
-                                    
-                                    
+			                		$sql_movie = "INSERT INTO `movie-times` (device_mac,sn,time,movie_name,movie_play_times) values ('{$device_mac}','{$sn}','{$timeForLog}','{$i}','{$logdate[$i+5]}')";
+                                    $query = $this->db->query($sql_movie);                                                                      
 			                	}
 
 				            }
