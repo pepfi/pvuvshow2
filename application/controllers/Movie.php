@@ -6,26 +6,52 @@ class Movie extends CI_Controller{
         $this->load->model('movie_model');
         $this->load->library('pagination');
     }
+
+    //per page shows nums given    
+    public function nums_per_page(){        
+        if($this->uri->segment(4)){
+            switch($this->uri->segment(4)){
+                case 20:
+                    $this->session->set_userdata('movie_pageSize',20);
+                    break;
+                case 50:
+                    $this->session->set_userdata('movie_pageSize',50);
+                    break;
+                case 100:
+                    $this->session->set_userdata('movie_pageSize',100);
+                    break;
+            }        
+        }        
+    }
     
-    public function page(){
-        $config['base_url'] = base_url('/movie/index/');;
-        $config['total_rows'] = $this->movie_model->info_nums();
-        $config['per_page'] = 5;
+    public function page($method, $movie_nums){
+        $config['base_url'] = base_url("/movie/".$method."/");
+        $config['total_rows'] = $movie_nums;        
+        if($this->session->userdata('movie_pageSize')){//Url increasing span
+            $config['per_page'] = $this->session->userdata('movie_pageSize');    
+        }else {
+            $config['per_page'] = 20; //default nums per page       
+        }        
         $config['first_link'] = '首页';        
         $config['last_link'] = '尾页';
         $config['prev_link'] = '上一页'; 
         $config['next_link'] = '下一页';
-        $config['cur_tag_open'] = "<div style='display:block;width:20px;height:20px;float:left;background:#337ab7;color:white;text-align:center'>";
+        $config['cur_tag_open'] = "<div style='display:block;width:40px;height:20px;float:left;background:#337ab7;color:white;text-align:center'>";
         $config['cur_tag_close'] = '</div>';
-        $config['num_tag_open'] = "<div style='display:block;width:20px;height:20px;float:left;text-align:center'>";
-        $config['num_tag_close'] = '</div>';         
-        $this->pagination->initialize($config);
-        
+        $config['num_tag_open'] = "<div style='display:block;width:40px;height:20px;float:left;text-align:center'>";
+        $config['num_tag_close'] = '</div>';        
+        $this->pagination->initialize($config);        
         $data['page'] = $this->pagination->create_links();
         
-        $offset = ($this->uri->segment(3) == null)?0:$this->uri->segment(3);
-        $pageSize = $config['per_page'];
-        $data['deviceinfo'] = $this->movie_model->deviceinfo($offset, $pageSize);
+        if($this->uri->segment(3) == 'per_page'){//offset of data start
+            $offset = 0;
+        }else {
+            $offset = ($this->uri->segment(3) == null)?0:$this->uri->segment(3);
+        }
+        $pageSize = $config['per_page'];//the number of data each page 
+          
+        $this->session->set_userdata('movie_offset', $offset);
+        $this->session->set_userdata('movie_final_pagesize', $pageSize);
         $this->load->vars($data);
     }
     
@@ -125,7 +151,17 @@ class Movie extends CI_Controller{
     
     public function index(){
         
-        $this->page();
+        $this->nums_per_page();
+        if(!$this->session->userdata('movie_nums')){//run one time
+            $data['movie_nums']= $this->movie_model->info_nums();
+            $this->session->set_userdata('movie_nums', $data['movie_nums']);
+        }
+        else{//run from second time
+            $data['movie_nums'] = $this->session->userdata('movie_nums');
+        }
+        $this->page("index", $data['movie_nums']);
+        
+        $data['deviceinfo'] = $this->movie_model->deviceinfo($this->session->userdata('movie_offset'), $this->session->userdata('movie_final_pagesize'));
         
         $data['home_nav_class'] = "";
         $data['device_nav_class'] = '';
@@ -144,6 +180,9 @@ class Movie extends CI_Controller{
             $this->movie_time($num['movie_name'], $num['updatetime'], $num['movie_play_total']);
         }
 
+        $data['controller'] = 'movie';
+        $data['method'] = "index";//for link
+        
         $this->load->view('admin/header', $data);
         $this->load->view('admin/movie', $data);
         $this->load->view('admin/footer');        

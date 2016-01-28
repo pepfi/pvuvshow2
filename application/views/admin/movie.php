@@ -1,6 +1,6 @@
 <script src="/application/views/global/custom/js/esl.js"></script>
 <div id="chart0" style="width:370px;height:250px;border:1px solid #ccc;float:left"></div>
-<div id="chart1" style="width:370px;height:250px;border:1px solid #ccc;float:left"></div>
+<div id="chart1" style="width:370px;height:250px;border:1px solid #ccc;float:left;margin-left:20px"></div>
 <?php
     date_default_timezone_set('PRC');
     $six_days_ago = "'".date('y-m-d', strtotime('-6 day'))."'";
@@ -146,7 +146,6 @@
         );
         </script>";
 ?>
-
 <div style="width:800px;float:left;margin-top:10px">
     <table>
 
@@ -164,23 +163,29 @@
                 <td width="25%"><?php echo $row['movie_play_times'];?></td>         
             </tr>
         <?php endforeach?>
-        
     </table>
 </div>
-<div style="width:600px;float:right;margin-top:10px;">
-    <span><?php echo $page;?>跳到<input type='text' id='to_page' style='width:30px;height:20px'>页</span>
-    <input type="hidden" id="jump_url" value="<?php echo base_url('movie/index');?>">
-    <input type="button" value="确定" class='btn btn-default btn-xs' onClick='jump()'>
-</div> 
-
-<script type="text/javascript">
-    function jump(){
-        var jump_link;
-        if(document.getElementById("to_page").value > 0){
-            jump_link = document.getElementById("jump_url").value + "/" + (document.getElementById("to_page").value-1)*5;
-        }else{
-            jump_link = document.getElementById("jump_url").value+"/"+0;
-        }
-        window.open(jump_link, '_self');
+<div style="width:750px;float:left;margin-top:10px;">
+    <div style="width:180px;float:right;margin-top:10px;">
+       <span>每页显示：</span>
+       <?php echo "<a href='/movie/index/per_page/20'>20</a>"; ?>
+       <?php echo "<a href='/movie/index/per_page/50'>50</a>"; ?>
+       <?php echo "<a href='/movie/index/per_page/100'>100</a>"; ?>  
+    </div>
+    <div style="width:570px;float:right;margin-top:10px;">
+        <?php echo $page;?>&nbsp;&nbsp;跳到<input type='text' id='to_page' style='width:30px;height:20px'>页
+        <input type="hidden" id="jump_url" value="<?php echo base_url($controller.'/'.$method);?>">
+        <input type="hidden" id="final_pagesize" value="<?php echo $this->session->userdata('movie_final_pagesize');?>">
+        <input type="button" value="确定" class='btn btn-default btn-xs' onclick=jump()>
+    </div> 
+</div>
+<script language="LiveScript"> 
+function jump(){
+    var offset = (document.getElementById("to_page").value - 1)*document.getElementById('final_pagesize').value;
+    if(offset < 0){
+        offset = 0;
     }
+    var url =document.getElementById("jump_url").value+'/'+ offset;        
+    window.open(url, '_self');    
+} 
 </script>

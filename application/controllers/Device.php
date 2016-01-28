@@ -19,16 +19,16 @@ class Device extends CI_Controller{
         if($this->uri->segment(4)){
             switch($this->uri->segment(4)){
                 case 3:
-                    $this->session->set_userdata('pageSize',3);
+                    $this->session->set_userdata('device_pageSize',3);
                     break;
                 case 6:
-                    $this->session->set_userdata('pageSize',6);
+                    $this->session->set_userdata('device_pageSize',6);
                     break;
                 case 9:
-                    $this->session->set_userdata('pageSize',9);
+                    $this->session->set_userdata('device_pageSize',9);
                     break;
                 case 12:
-                    $this->session->set_userdata('pageSize',12);
+                    $this->session->set_userdata('device_pageSize',12);
             }        
         }        
     }
@@ -45,8 +45,8 @@ class Device extends CI_Controller{
     public function page($method, $device_nums){
         $config['base_url'] = base_url("/device/".$method."/");
         $config['total_rows'] = $device_nums;        
-        if($this->session->userdata('pageSize')){//Url increasing span
-            $config['per_page'] = $this->session->userdata('pageSize');    
+        if($this->session->userdata('device_pageSize')){//Url increasing span
+            $config['per_page'] = $this->session->userdata('device_pageSize');    
         }else {
             $config['per_page'] = 6; //default nums per page       
         }        
@@ -54,9 +54,9 @@ class Device extends CI_Controller{
         $config['last_link'] = '尾页';
         $config['prev_link'] = '上一页'; 
         $config['next_link'] = '下一页';
-        $config['cur_tag_open'] = "<div style='display:block;width:20px;height:20px;float:left;background:#337ab7;color:white;text-align:center'>";
+        $config['cur_tag_open'] = "<div style='display:block;width:40px;height:20px;float:left;background:#337ab7;color:white;text-align:center'>";
         $config['cur_tag_close'] = '</div>';
-        $config['num_tag_open'] = "<div style='display:block;width:20px;height:20px;float:left;text-align:center'>";
+        $config['num_tag_open'] = "<div style='display:block;width:40px;height:20px;float:left;text-align:center'>";
         $config['num_tag_close'] = '</div>';        
         $this->pagination->initialize($config);        
         $data['page'] = $this->pagination->create_links();
@@ -68,8 +68,15 @@ class Device extends CI_Controller{
         }
         $pageSize = $config['per_page'];//the number of data each page 
         
-        $this->session->set_userdata('offset', $offset);
-        $this->session->set_userdata('final_pagesize', $pageSize);
+        $this->session->set_userdata('device_offset', $offset);
+        $this->session->set_userdata('device_final_pagesize', $pageSize);
+ 
+        $data['home_nav_class'] = "";
+        $data['device_nav_class'] = "class='active'";
+        $data['user_nav_class'] = '';
+        $data['log_nav_class'] = '';
+        $data['pvuv_nav_class'] = '';
+        $data['movie_nav_class'] = '';        
         $this->load->vars($data);
     }
     
@@ -84,15 +91,8 @@ class Device extends CI_Controller{
             $data['device_nums'] = $this->session->userdata('device_nums');
         }
         $this->page("index", $data['device_nums']);
- 
-        $data['home_nav_class'] = "";
-        $data['device_nav_class'] = "class='active'";
-        $data['user_nav_class'] = '';
-        $data['log_nav_class'] = '';
-        $data['pvuv_nav_class'] = '';
-        $data['movie_nav_class'] = '';
         
-        $data['deviceinfo'] = $this->device_model->deviceinfo($this->session->userdata('offset'), $this->session->userdata('final_pagesize'));
+        $data['deviceinfo'] = $this->device_model->deviceinfo($this->session->userdata('device_offset'), $this->session->userdata('device_final_pagesize'));
   
         $data['controller'] = 'device';
         $data['method'] = "index";//for link
@@ -113,7 +113,7 @@ class Device extends CI_Controller{
         $this->page('search', $data['search_nums']);
         $data['device_nums'] = $data['search_nums'];
         
-        $data['deviceinfo'] = $this->device_model->search($this->session->userdata('offset'), $this->session->userdata('final_pagesize'));
+        $data['deviceinfo'] = $this->device_model->search($this->session->userdata('device_offset'), $this->session->userdata('device_final_pagesize'));
 
         $data['controller'] = 'device';        
         $data['method'] = "search";//for link
