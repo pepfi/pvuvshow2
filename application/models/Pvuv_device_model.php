@@ -14,6 +14,7 @@ class Pvuv_device_model extends CI_Model {
        // $deviceMacArray = array();
         
         $timeFlag = date("Y-m-d",strtotime("-1 day"));
+        
         $sqlForDeviceMac = "SELECT device_mac from `pvuv-log` group by device_mac";
         $deviceMacArray = $this->db->query($sqlForDeviceMac)->result();
         //return $deviceMacArray;
@@ -24,6 +25,19 @@ class Pvuv_device_model extends CI_Model {
             $sql = "SELECT count('{$deviceMacArray[$i]->device_mac}') FROM `pvuv-log` WHERE time BETWEEN '{$timeFlag} 00:00:00' AND '{$timeFlag} 23:59:59'";
            // return $sql;
             $targetMac = $deviceMacArray[$i]->device_mac;
+            $snAndMac = $this->db->query("SELECT mac,hostsn FROM `info_lteinfo` group by mac")->result();
+            foreach($snAndMac as $row)
+            {
+                if(($row->mac === '80:F8:EB:50:01:40') && (isset($row->hostsn)))
+                {
+                    $sn = $row->hostsn;
+                }
+                else
+                {
+                    $sn = '000000000000000000000';
+                }
+            }
+            
             //return $targetMac;
             $pv = $this->db->query("SELECT * FROM `pvuv-log` WHERE time BETWEEN '{$timeFlag} 00:00:00' AND '{$timeFlag} 23:59:59' AND device_mac = '{$targetMac}'")->num_rows();
             //14
@@ -42,7 +56,7 @@ class Pvuv_device_model extends CI_Model {
             //2
             $uv_windows = $this->db->query("SELECT remote_mac from `pvuv-log` WHERE time BETWEEN '{$timeFlag} 00:00:00' AND '{$timeFlag} 23:59:59' AND http_user_agent like '%windows%' AND device_mac = '{$targetMac}' group by remote_mac")->num_rows();
             //return $uv_windows;
-            $query = $this->db->query("INSERT INTO `pvuv-device` (device_mac,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) VALUES ('{$targetMac}','{$timeFlag}','{$pv}','{$download_app_times}','{$uv}','{$uv_android}','{$uv_ios}','{$uv_windows}','{$uv_unknow}')");
+            $query = $this->db->query("INSERT INTO `pvuv-device` (device_mac,sn,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) VALUES ('{$targetMac}','$sn','{$timeFlag}','{$pv}','{$download_app_times}','{$uv}','{$uv_android}','{$uv_ios}','{$uv_windows}','{$uv_unknow}')");
             
         }    
 //        $device_mac_array = $this->db->query("SELECT device_mac from `pvuv-log` WHERE time like '%{$time_latest}%'")->num_rows();

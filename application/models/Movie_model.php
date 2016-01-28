@@ -10,13 +10,17 @@ class Movie_model extends CI_Model{
     }
     
     public function deviceinfo($offset, $pagesize){
+<<<<<<< HEAD
         $sql = "select * from `movie-times`  order by time desc limit $offset,$pagesize";
+=======
+        $sql = "select * from `movie-times` order by time desc limit $offset,$pagesize";
+>>>>>>> origin/master
         
         return $this->db->query($sql)->result_array();
     }    
     
     public function get_movies() {
-        $query = $this->db->query("select updatetime, movie_name, movie_play_total from `movie-total`");
+        $query = $this->db->query("select updatetime, movie_name, movie_play_total from `movie-total` order by updatetime desc");
         
         return $query->result_array();
     }   

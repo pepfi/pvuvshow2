@@ -14,7 +14,8 @@ class Updatelog_model extends CI_Model {
         $dir =  'D:\dev\pvuvlog';
         $dirname = $dir."\\"; //要遍历的目录名字
         echo "dirname is:$dirname:end";
-        
+//        $result = $this->db->query("SELECT hostsn FROM `info_lteinfo` where mac = '80:F8:EB:50:05:60'")->result_array();
+//        echo $result[0]['hostsn'];
         $today = date("Y-m-d",time());
         $yestoday =  date("Y-m-d",strtotime("-1 day"));
         //echo $yestoday;
@@ -33,9 +34,11 @@ class Updatelog_model extends CI_Model {
                             $num += 1;
                             $dirFile=$dirname.$file;
                             $device_mac = substr($file,9,17);
-                            $timeForLog = substr($file,31,10); 
-                            echo "mac:$device_mac";
-                            echo "time:$timeForLog";                           
+                            $timeForLog = substr($file,31,10);
+                            $sn = $this->db->query("SELECT hostsn FROM `info_lteinfo` where mac = '{$device_mac}'")->result();
+                            echo $sn;
+                            //echo "mac:$device_mac";
+                            //echo "time:$timeForLog";                           
 
                             if( $timeForLog != $yestoday)
                             {
@@ -87,17 +90,16 @@ class Updatelog_model extends CI_Model {
 	                            }
 	                            $uv = $logdate[2] + $logdate[3] + $logdate[4];
 	                            echo "uv:$uv";
-
+                                $sn = $this->db->query("SELECT hostsn FROM `info_lteinfo` where mac = '{$device_mac}'")->result_array();
+                                
 	                            // insert into databases;
-                                $sql_device = "INSERT INTO `pvuv-device` (device_mac,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) values ('{$device_mac}','{$timeForLog}','{$logdate[0]}','{$logdate[1]}','{$uv}','{$logdate[2]}','{$logdate[3]}','{$logdate[4]}','0')";
+                                $sql_device = "INSERT INTO `pvuv-device` (device_mac,sn,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) values ('{$device_mac}','{$sn[0]['hostsn']}','{$timeForLog}','{$logdate[0]}','{$logdate[1]}','{$uv}','{$logdate[2]}','{$logdate[3]}','{$logdate[4]}','0')";
                                 
                                 $query = $this->db->query($sql_device);
                                 for($i=0;$i<10;$i++)
 			                	{
-			                		$sql_movie = "INSERT INTO `movie-times` (device_mac,time,movie_name,movie_play_times) values ('{$device_mac}','{$timeForLog}','{$i}','{$logdate[$i+5]}')";
-                                    $query = $this->db->query($sql_movie);                                  
-                                    
-                                    
+			                		$sql_movie = "INSERT INTO `movie-times` (device_mac,sn,time,movie_name,movie_play_times) values ('{$device_mac}','{$sn[0]['hostsn']}','{$timeForLog}','{$i}','{$logdate[$i+5]}')";
+                                    $query = $this->db->query($sql_movie);                                                                      
 			                	}
 
 				            }
