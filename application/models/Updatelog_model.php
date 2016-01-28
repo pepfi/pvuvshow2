@@ -35,8 +35,16 @@ class Updatelog_model extends CI_Model {
                             $dirFile=$dirname.$file;
                             $device_mac = substr($file,9,17);
                             $timeForLog = substr($file,31,10);
-                            $sn = $this->db->query("SELECT hostsn FROM `info_lteinfo` where mac = '{$device_mac}'")->result();
-                            echo $sn;
+                            $result = $this->db->query("SELECT hostsn FROM `info_lteinfo` where mac = '{$device_mac}'")->result_array();
+                            if(isset($result[0]['hostsn']))
+                            {
+                                $sn = $result[0]['hostsn'];
+                            }
+                            else
+                            {
+                                $sn = '000000';
+                            }
+                            //echo $sn;
                             //echo "mac:$device_mac";
                             //echo "time:$timeForLog";                           
 
@@ -90,7 +98,6 @@ class Updatelog_model extends CI_Model {
 	                            }
 	                            $uv = $logdate[2] + $logdate[3] + $logdate[4];
 	                            echo "uv:$uv";
-                                $sn = $this->db->query("SELECT hostsn FROM `info_lteinfo` where mac = '{$device_mac}'")->result_array();
                                 
 	                            // insert into databases;
                                 $sql_device = "INSERT INTO `pvuv-device` (device_mac,sn,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) values ('{$device_mac}','{$sn[0]['hostsn']}','{$timeForLog}','{$logdate[0]}','{$logdate[1]}','{$uv}','{$logdate[2]}','{$logdate[3]}','{$logdate[4]}','0')";
