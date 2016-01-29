@@ -104,31 +104,50 @@
         );
         </script>";
 ?>
-<div style="width:800px;float:left;margin-top:10px">
-    <table>
+
+<div style="width:800px;float:left;margin-top:10px;">
+    <div style="width:180px;float:right;margin-top:10px;">
+       <span>每页显示：</span>
+       <?php echo "<a href='/pvuv/index/per_page/20'>20</a>"; ?>
+       <?php echo "<a href='/pvuv/index/per_page/50'>50</a>"; ?>
+       <?php echo "<a href='/pvuv/index/per_page/100'>100</a>"; ?> 
+    </div>
+    <div style="width:620px;float:right;margin-top:10px;">
+        <?php echo $page;?>&nbsp;&nbsp;跳到<input type='text' id='to_page' style='width:30px;height:20px'>页
+        <input type="hidden" id="jump_url" value="<?php echo base_url($controller.'/'.$method);?>">
+        <input type="hidden" id="final_pagesize" value="<?php echo $this->session->userdata('pvuv_final_pagesize');?>">
+        <input type="button" value="确定" class='btn btn-default btn-xs' onclick=jump()>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="<?php echo base_url('/pvuv/to_excel'); ?>">导出报表</a>
+    </div> 
+</div>
+
+<div style="width:1100px;float:left;margin-top:10px">
+    <table style="width:1100px">
 
         <tr style="background:#337ab7;color:white;">
             <td width="20%">device_mac</td>
-            <td width="15%">time</td>
+            <td width="10%">sn</td>
+            <td width="10%">time</td>
             <td width="10%">pv</td>
             <td width="10%">download</td>
-            <td width="10%">uv</td>
-            <td width="10%">uv_andriod</td>
-            <td width="10%">uv_ios</td>
-            <td width="15%">uv_windows</td>
-            <td width="10%">uv_others</td>
+            <td width="8%">uv</td>
+            <td width="8%">uv_andriod</td>
+            <td width="8%">uv_ios</td>
+            <td width="8%">uv_windows</td>
+            <td width="8%">uv_others</td>
         </tr>
         <?php foreach($deviceinfo as $row):?>
             <tr> 
                 <td width="20%"><?php echo $row['device_mac'];?></td>
-                <td width="15%"><?php echo $row['time'];?></td>
+                <td width="10%"><?php echo $row['sn'];?></td>
+                <td width="10%"><?php echo $row['time'];?></td>
                 <td width="10%"><?php echo $row['pv'];?></td>
                 <td width="10%"><?php echo $row['download_app_times'];?></td>
-                <td width="10%"><?php echo $row['uv'];?></td>
-                <td width="10%"><?php echo $row['uv_android'];?></td>
-                <td width="10%"><?php echo $row['uv_ios'];?></td>
-                <td width="15%"><?php echo $row['uv_windows'];?></td>
-                <td width="10%"><?php echo $row['uv_others'];?></td>             
+                <td width="8%"><?php echo $row['uv'];?></td>
+                <td width="8%"><?php echo $row['uv_android'];?></td>
+                <td width="8%"><?php echo $row['uv_ios'];?></td>
+                <td width="8%"><?php echo $row['uv_windows'];?></td>
+                <td width="8%"><?php echo $row['uv_others'];?></td>             
             </tr>
         <?php endforeach?>
         
@@ -141,12 +160,12 @@
        <?php echo "<a href='/pvuv/index/per_page/50'>50</a>"; ?>
        <?php echo "<a href='/pvuv/index/per_page/100'>100</a>"; ?> 
     </div>
-    <div style="width:570px;float:right;margin-top:10px;">
+    <div style="width:620px;float:right;margin-top:10px;">
         <?php echo $page;?>&nbsp;&nbsp;跳到<input type='text' id='to_page' style='width:30px;height:20px'>页
         <input type="hidden" id="jump_url" value="<?php echo base_url($controller.'/'.$method);?>">
         <input type="hidden" id="final_pagesize" value="<?php echo $this->session->userdata('pvuv_final_pagesize');?>">
         <input type="button" value="确定" class='btn btn-default btn-xs' onclick=jump()>
-    </div> 
+    </div>
 </div>
 
 <script language="LiveScript"> 

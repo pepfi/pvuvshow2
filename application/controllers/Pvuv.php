@@ -5,8 +5,23 @@ class Pvuv extends CI_Controller{
         $this->load->model('pvuv_model');
         $this->load->helper('url'); 
         $this->load->library('pagination');
+        $this->load->helper('download');
     }
   
+    //download excel
+    public function to_excel(){
+        $data['detail'] = $this->pvuv_model->to_excel(); 
+        $pvuv_excel_string = "\xEF\xBB\xBF"."device_mac".", "."sn".", "."time".", "."pv".", "."download_app_times".", "."uv".", "."uv_android".", "."uv_ios".", "."uv_windows".", "."uv_others\n";
+        foreach($data['detail'] as $val){
+            $pvuv_excel_string .= $val['device_mac'].", ".$val['sn'].", ".$val['time'].", ".$val['pv']
+                               .", ".$val['download_app_times'].", ".$val['uv'].", ".$val['uv_android']
+                               .", ".$val['uv_ios'].",".$val['uv_windows'].", ".$val['uv_others']."\n";             
+        }
+        
+        $download_file = "pvuv_excel.csv";
+        force_download($download_file, $pvuv_excel_string);
+    }
+    
     //per page shows nums given    
     public function nums_per_page(){        
         if($this->uri->segment(4)){
@@ -56,7 +71,7 @@ class Pvuv extends CI_Controller{
     }
     
     public function index(){
-        
+
         $this->nums_per_page();
         if(!$this->session->userdata('pvuv_nums')){//run one time
             $data['pvuv_nums']= $this->pvuv_model->info_nums();

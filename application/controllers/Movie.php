@@ -1,12 +1,119 @@
-<?php
+﻿<?php
 class Movie extends CI_Controller{
     public function __construct(){
         parent::__construct();
         $this->load->helper('url');
         $this->load->model('movie_model');
         $this->load->library('pagination');
+        $this->load->helper('download');
     }
 
+    //download excel
+    public function to_excel(){
+        $data['detailinfo'] = $this->movie_model->to_excel(); 
+        $movie_excel_string = "\xEF\xBB\xBF"."device_mac".", "."sn".", "."time".", "."movie_name".", "."movie_play_time"."\n";
+        foreach($data['detailinfo'] as $val){
+            switch($val['movie_name']){
+                case '0';
+                    $movie_name = "惊天魔盗团";
+                    break;
+                case '1';
+                    $movie_name = "特警判官";
+                    break;
+                case '2';
+                    $movie_name = "澳门风云2";
+                    break;
+                case '3';
+                    $movie_name = "暴风雨";
+                    break;
+                case '4';
+                    $movie_name = "匆匆那年";
+                    break; 
+                case '5';
+                    $movie_name = "撒娇女人最好命";
+                    break;
+                case '6';
+                    $movie_name = "白发魔女传";
+                    break;
+                case '7';
+                    $movie_name = "星际穿越";
+                    break;
+                case '8';
+                    $movie_name = "一触即发";
+                    break;
+                case '9';
+                    $movie_name = "大话天仙";
+                    break;
+                case '10';
+                    $movie_name = "夺命追踪";
+                    break;
+                case '11';
+                    $movie_name = "背水一战";
+                    break;
+                case '12';
+                    $movie_name = "雅典娜无间碟局";
+                    break;
+                case '13';
+                    $movie_name = "妙笔生花";
+                    break;
+                case '14';
+                    $movie_name = "单刀直入";
+                    break; 
+                case '15';
+                    $movie_name = "欲望爱人";
+                    break;
+                case '16';
+                    $movie_name = "超级8";
+                    break;
+                case '17';
+                    $movie_name = "冲上云霄";
+                    break;
+                case '18';
+                    $movie_name = "北方之战";
+                    break;
+                case '19';
+                    $movie_name = "铁血娇娃";
+                    break;
+                case '20';
+                    $movie_name = "窃听风云";
+                    break;
+                case '21';
+                    $movie_name = "放手爱";
+                    break;
+                case '22';
+                    $movie_name = "冲锋战警";
+                    break;
+                case '23';
+                    $movie_name = "一座城池";
+                    break;
+                case '24';
+                    $movie_name = "这个杀手不太冷";
+                    break; 
+                case '25';
+                    $movie_name = "禁闭岛";
+                    break;
+                case '26';
+                    $movie_name = "特种部队";
+                    break;
+                case '27';
+                    $movie_name = "变形金刚2";
+                    break;
+                case '28';
+                    $movie_name = "碟中谍3";
+                    break;
+                case '29';
+                    $movie_name = "捕蝇纸";
+                    break;
+            }
+            
+            $movie_excel_string .= $val['device_mac'].", ".$val['sn'].", ".$val['time'].", ".$movie_name
+                               .", ".$val['movie_play_times']."\n";             
+        }
+        
+        $download_file = "movie_excel.csv";
+        force_download($download_file, $movie_excel_string);
+    }
+     
     //per page shows nums given    
     public function nums_per_page(){        
         if($this->uri->segment(4)){
@@ -55,7 +162,7 @@ class Movie extends CI_Controller{
         $this->load->vars($data);
     }
     
-    function movie_name(){
+    public function movie_name(){
         $data['movie_0_name'] = "惊天魔盗团";
         $data['movie_1_name'] = "特警判官";
         $data['movie_2_name'] = "澳门风云2";
@@ -66,6 +173,28 @@ class Movie extends CI_Controller{
         $data['movie_7_name'] = "星际穿越";
         $data['movie_8_name'] = "一触即发";
         $data['movie_9_name'] = "大话天仙";
+        $data['movie_10_name'] = "夺命追踪";
+        $data['movie_11_name'] = "背水一战";
+        $data['movie_12_name'] = "雅典娜无间碟局";
+        $data['movie_13_name'] = "妙笔生花";
+        $data['movie_14_name'] = "单刀直入";
+        $data['movie_15_name'] = "欲望爱人";
+        $data['movie_16_name'] = "超级8";
+        $data['movie_17_name'] = "冲上云霄";
+        $data['movie_18_name'] = "北方之战";
+        $data['movie_19_name'] = "铁血娇娃";
+        $data['movie_20_name'] = "窃听风云";
+        $data['movie_21_name'] = "放手爱";
+        $data['movie_22_name'] = "冲锋战警";
+        $data['movie_23_name'] = "一座城池";
+        $data['movie_24_name'] = "这个杀手不太冷";
+        $data['movie_25_name'] = "禁闭岛";
+        $data['movie_26_name'] = "特种部队";
+        $data['movie_27_name'] = "变形金刚2";
+        $data['movie_28_name'] = "碟中谍3";
+        $data['movie_29_name'] = "捕蝇纸";
+
+               
         $this->load->vars($data);
     }
     
@@ -113,6 +242,66 @@ class Movie extends CI_Controller{
                 break;
             case "9":
                 $data['movie_9_pv'.$movie_time] = $movie_times;
+                break;
+            case "10":
+                $data['movie_10_pv'.$movie_time] = $movie_times;
+                break;
+            case "11":
+                $data['movie_11_pv'.$movie_time] = $movie_times;
+                break;
+            case "12":
+                $data['movie_12_pv'.$movie_time] = $movie_times;
+                break;
+            case "13":
+                $data['movie_13_pv'.$movie_time] = $movie_times;
+                break;
+            case "14":
+                $data['movie_14_pv'.$movie_time] = $movie_times;
+                break;
+            case "15":
+                $data['movie_15_pv'.$movie_time] = $movie_times;
+                break;
+            case "16":
+                $data['movie_16_pv'.$movie_time] = $movie_times;
+                break;
+            case "17":
+                $data['movie_17_pv'.$movie_time] = $movie_times;
+                break;
+            case "18":
+                $data['movie_18_pv'.$movie_time] = $movie_times;
+                break;
+            case "19":
+                $data['movie_19_pv'.$movie_time] = $movie_times;
+                break;
+            case "20":
+                $data['movie_20_pv'.$movie_time] = $movie_times;
+                break;
+            case "21":
+                $data['movie_21_pv'.$movie_time] = $movie_times;
+                break;
+            case "22":
+                $data['movie_22_pv'.$movie_time] = $movie_times;
+                break;
+            case "23":
+                $data['movie_23_pv'.$movie_time] = $movie_times;
+                break;
+            case "24":
+                $data['movie_24_pv'.$movie_time] = $movie_times;
+                break;
+            case "25":
+                $data['movie_25_pv'.$movie_time] = $movie_times;
+                break;
+            case "26":
+                $data['movie_26_pv'.$movie_time] = $movie_times;
+                break;
+            case "27":
+                $data['movie_27_pv'.$movie_time] = $movie_times;
+                break;
+            case "28":
+                $data['movie_28_pv'.$movie_time] = $movie_times;
+                break;
+            case "29":
+                $data['movie_29_pv'.$movie_time] = $movie_times;
                 break;
             default:
 //                echo "错误";

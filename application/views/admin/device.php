@@ -123,13 +123,13 @@
 </div>
 <div class="row">
     <div class='col-md-5'></div>
-    <div class='col-md-1'><?php echo '共'.ceil($device_nums/$this->session->userdata('final_pagesize')).'页';?></div>
+    <div class='col-md-1'><?php echo '共'.ceil($device_nums/$this->session->userdata('device_final_pagesize')).'页';?></div>
     <div class='col-md-1'><?php echo '共'.$device_nums.'条';?></div>
     <div class='col-md-3'><?php echo $page;?></div>
     <div class="col-md-2">
         跳到<input type='text' id='to_page' style='width:30px;height:20px'>页
         <input type="hidden" id="jump_url" value="<?php echo base_url($controller.'/'.$method);?>">
-        <input type="hidden" id="final_pagesize" value="<?php echo $this->session->userdata('final_pagesize');?>">
+        <input type="hidden" id="final_pagesize" value="<?php echo $this->session->userdata('device_final_pagesize');?>">
         <input type="button" value="确定" class='btn btn-default btn-xs' onclick=jump()>
     </div>
 </div>

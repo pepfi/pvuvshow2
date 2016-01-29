@@ -9,11 +9,13 @@ class Pvuv_model extends CI_Model {
     }
 
     public function deviceinfo($offset, $pagesize){
-
-        $sql = "select * from `pvuv-device`  order by time desc limit $offset,$pagesize";
-
         $sql = "select * from `pvuv-device` order by time desc limit $offset,$pagesize";
+        
+        return $this->db->query($sql)->result_array();
+    }
 
+    public function to_excel(){
+        $sql = "select * from `pvuv-device`";
         
         return $this->db->query($sql)->result_array();
     }
