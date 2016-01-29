@@ -10,12 +10,11 @@ class Movie_model extends CI_Model{
     }
     
     public function deviceinfo($offset, $pagesize){
-<<<<<<< HEAD
+
         $sql = "select * from `movie-times`  order by time desc limit $offset,$pagesize";
-=======
+
         $sql = "select * from `movie-times` order by time desc limit $offset,$pagesize";
->>>>>>> origin/master
-        
+
         return $this->db->query($sql)->result_array();
     }    
     

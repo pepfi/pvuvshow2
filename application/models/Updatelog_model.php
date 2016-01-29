@@ -33,16 +33,19 @@ class Updatelog_model extends CI_Model {
                     {
                             $num += 1;
                             $dirFile=$dirname.$file;
-                            $device_mac = substr($file,9,17);
+                            $device_macformat = substr($file,9,17);
                             $timeForLog = substr($file,31,10);
-                            $result = $this->db->query("SELECT hostsn FROM `info_lteinfo` where mac = '{$device_mac}'")->result_array();
+                            $device_mac = str_replace("-", ":", $device_macformat);
+
+                            $sql_query_snbymac = "SELECT hostsn FROM `info_lteinfo` where mac = '{$device_mac}'";
+                            $result = $this->db->query($sql_query_snbymac)->result_array();
                             if(isset($result[0]['hostsn']))
                             {
                                 $sn = $result[0]['hostsn'];
                             }
                             else
                             {
-                                $sn = '000000';
+                                $sn = '111111';
                             }
                             //echo $sn;
                             //echo "mac:$device_mac";
@@ -100,12 +103,12 @@ class Updatelog_model extends CI_Model {
 	                            echo "uv:$uv";
                                 
 	                            // insert into databases;
-                                $sql_device = "INSERT INTO `pvuv-device` (device_mac,sn,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) values ('{$device_mac}','{$sn[0]['hostsn']}','{$timeForLog}','{$logdate[0]}','{$logdate[1]}','{$uv}','{$logdate[2]}','{$logdate[3]}','{$logdate[4]}','0')";
+                                $sql_device = "INSERT INTO `pvuv-device` (device_mac,sn,time,pv,download_app_times,uv,uv_android,uv_ios,uv_windows,uv_others) values ('{$device_mac}','{$sn}','{$timeForLog}','{$logdate[0]}','{$logdate[1]}','{$uv}','{$logdate[2]}','{$logdate[3]}','{$logdate[4]}','0')";
                                 
                                 $query = $this->db->query($sql_device);
                                 for($i=0;$i<10;$i++)
 			                	{
-			                		$sql_movie = "INSERT INTO `movie-times` (device_mac,sn,time,movie_name,movie_play_times) values ('{$device_mac}','{$sn[0]['hostsn']}','{$timeForLog}','{$i}','{$logdate[$i+5]}')";
+			                		$sql_movie = "INSERT INTO `movie-times` (device_mac,sn,time,movie_name,movie_play_times) values ('{$device_mac}','{$sn}','{$timeForLog}','{$i}','{$logdate[$i+5]}')";
                                     $query = $this->db->query($sql_movie);                                                                      
 			                	}
 
